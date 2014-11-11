@@ -10,11 +10,30 @@ output:
 The following code chunck unzip the activity.zip file then load the data using read.csv
 
 
-```{r, echo=TRUE}
+
+```r
 unzip("activity.zip", overwrite = TRUE)
 data <- read.csv("activity.csv")
 dim(data)
+```
+
+```
+## [1] 17568     3
+```
+
+```r
 summary(data)
+```
+
+```
+##      steps                date          interval     
+##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
+##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
+##  Median :  0.00   2012-10-03:  288   Median :1177.5  
+##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
+##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
+##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
+##  NA's   :2304     (Other)   :15840
 ```
 
 
