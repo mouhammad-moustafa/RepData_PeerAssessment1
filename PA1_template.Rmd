@@ -11,14 +11,29 @@ The following code chunck unzip the activity.zip file then load the data using r
 
 
 ```{r, echo=TRUE}
+## Load the data
 unzip("activity.zip", overwrite = TRUE)
-data <- read.csv("activity.csv")
-dim(data)
-summary(data)
+data <- read.csv("activity.csv", stringsAsFactors = FALSE)
+
+## Process/transform the data (if necessary) into a format suitable for your analysis
+library(lubridate)
+## create datetime column by adding date to minutes interval
+data$datetime <- ymd(data$date) + new_difftime(minutes = data$interval)
+## as.Date: converts charcters to Date using "dd/mm/yyyy" format 
+data$date <- as.Date(data$date)
 ```
 
 
 ## What is mean total number of steps taken per day?
+```{r, echo=TRUE}
+## Make a histogram of the total number of steps taken each day
+## compute the total number of steps per day
+stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
+## Make a histogram
+hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
+
+```
+
 
 
 

@@ -12,32 +12,31 @@ The following code chunck unzip the activity.zip file then load the data using r
 
 
 ```r
+## Load the data
 unzip("activity.zip", overwrite = TRUE)
-data <- read.csv("activity.csv")
-dim(data)
-```
+data <- read.csv("activity.csv", stringsAsFactors = FALSE)
 
-```
-## [1] 17568     3
-```
-
-```r
-summary(data)
-```
-
-```
-##      steps                date          interval     
-##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
-##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
-##  Median :  0.00   2012-10-03:  288   Median :1177.5  
-##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
-##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
-##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
-##  NA's   :2304     (Other)   :15840
+## Process/transform the data (if necessary) into a format suitable for your analysis
+library(lubridate)
+## create datetime column by adding date to minutes interval
+data$datetime <- ymd(data$date) + new_difftime(minutes = data$interval)
+## as.Date: converts charcters to Date using "dd/mm/yyyy" format 
+data$date <- as.Date(data$date)
 ```
 
 
 ## What is mean total number of steps taken per day?
+
+```r
+## Make a histogram of the total number of steps taken each day
+## compute the total number of steps per day
+stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
+## Make a histogram
+hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
 
 
 
