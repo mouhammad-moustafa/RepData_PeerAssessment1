@@ -27,7 +27,7 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d")
 #### 1. Make a histogram of the total number of steps taken each day
 
 ```r
-## compute the total number of steps per day
+## compute the total number of steps per day ignoring the missing values
 stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
 ## Make a histogram
 hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
@@ -47,7 +47,7 @@ the median of total number of steps taken per day is 10765
 #### 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
 
 ```r
-## compute the average number of steps taken across all days
+## compute the average number of steps taken across all days ignoring the missing values
 asteps <- aggregate(steps ~ interval, data = data, FUN = "mean")
 ## create time column by adding coverting interval to H:m
 asteps$time <- paste(asteps$interval%/%100, asteps$interval%%100, sep = ":")
@@ -72,7 +72,46 @@ The 5-minute interval that contain the maximum number of steps , on average acro
 
 
 ## Imputing missing values
+#### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
+```r
+## the sum of na values returns the total number of missing values in the dataset for each column
+## the first column steps contains all the missing values
+missingvalues <- sapply(data, function(x) sum(is.na(x)))
+
+nbna <- missingvalues[1]
+```
+the total number of missing values in the dataset is 2304
+
+#### 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
+
+```r
+## use the mean for that 5-minute interval ignoring the missing values
+avsteps <- aggregate(steps ~ interval, data = data, FUN = "mean")
+## Merge the aggregate data into the original data as a new imputation column based on interval link
+data1 <- merge(x = data, y = avsteps, "interval")
+## rename columns
+colnames(data1) <- c("interval", "steps", "date", "avsteps")
+```
+#### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
+
+```r
+## replace missing values by average value
+data1$steps[is.na(data1$steps)] <- data1$avsteps[is.na(data1$steps)]
+## keep usefull columns
+data1 <- data1[, c("interval", "steps", "date")]
+```
+
+#### 4. Make a histogram of the total number of steps taken each day and Calculate and report the mean and median total number of steps taken per day.
+
+```r
+## compute the total number of steps per day ignoring the missing values
+stepsperday1 <- aggregate(steps ~ date, data = data1, FUN = sum)
+## Make a histogram
+hist(stepsperday1$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
+```
+
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
