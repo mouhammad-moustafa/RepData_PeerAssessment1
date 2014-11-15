@@ -7,26 +7,23 @@ output:
 
 
 ## Loading and preprocessing the data
-The following code chunck unzip the activity.zip file then load the data using read.csv
-
-
+#### 1. Load the data
 ```{r, echo=TRUE}
-## Load the data
 unzip("activity.zip", overwrite = TRUE)
 data <- read.csv("activity.csv", stringsAsFactors = FALSE)
+```
 
-## Process/transform the data (if necessary) into a format suitable for your analysis
-library(lubridate)
-## create datetime column by adding date to minutes interval
-data$datetime <- ymd(data$date) + new_difftime(minutes = data$interval)
-## as.Date: converts charcters to Date using "dd/mm/yyyy" format 
-data$date <- as.Date(data$date)
+#### 2. Process/transform the data (if necessary) into a format suitable for your analysis
+```{r, echo=TRUE}
+## as.Date: converts charcters to Date using "yyyy-mm-dd" format 
+data$date <- as.Date(data$date, format = "%Y-%m-%d")
 ```
 
 
+
 ## What is mean total number of steps taken per day?
+#### 1. Make a histogram of the total number of steps taken each day
 ```{r, echo=TRUE}
-## Make a histogram of the total number of steps taken each day
 ## compute the total number of steps per day
 stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
 ## Make a histogram
@@ -34,10 +31,35 @@ hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day
 
 ```
 
+#### 2. Calculate and report the mean and median total number of steps taken per day
+
+the mean of total number of steps taken per day is `r mean(x = stepsperday$steps)`
+
+the median of total number of steps taken per day is `r median(x = stepsperday$steps)`
 
 
 
 ## What is the average daily activity pattern?
+#### 1. Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis)
+```{r, echo=TRUE}
+## compute the average number of steps taken across all days
+asteps <- aggregate(steps ~ interval, data = data, FUN = "mean")
+## create time column by adding coverting interval to H:m
+asteps$time <- paste(asteps$interval%/%100, asteps$interval%%100, sep = ":")
+## as.POSIXlt: converts charcters to Time using "H:M" format
+asteps$time <- as.POSIXlt(asteps$time, format = "%H:%M")
+plot(x = asteps$time, y = asteps$steps, type ="l", xlab = "Time", ylab = "Average number of steps", col = "blue")
+```
+
+#### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
+```{r, echo=TRUE}
+## order average steps across all the days 'asteps' by steps, extract the row of the maximum number of steps (first line)
+maxstepsrow <- with(asteps, order(-steps))[1]
+## extract the value of interval column for the maxstepsrow 
+maxinterval <- asteps[maxstepsrow, "interval"]
+```
+
+The 5-minute interval that contain the maximum number of steps , on average across all the days in the dataset, is `r maxinterval` 
 
 
 
