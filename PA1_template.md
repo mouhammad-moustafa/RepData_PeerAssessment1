@@ -37,6 +37,12 @@ hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day
 
 #### 2. Calculate and report the mean and median total number of steps taken per day
 
+```r
+meansteps <- mean(x = stepsperday$steps)
+mediansteps <- median(x = stepsperday$steps)
+```
+
+
 the mean of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
 
 the median of total number of steps taken per day is 10765
@@ -56,7 +62,7 @@ asteps$time <- as.POSIXlt(asteps$time, format = "%H:%M")
 plot(x = asteps$time, y = asteps$steps, type ="l", xlab = "Time", ylab = "Average number of steps", col = "blue")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
 
 #### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -111,7 +117,20 @@ stepsperday1 <- aggregate(steps ~ date, data = data1, FUN = sum)
 hist(stepsperday1$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
 
+```r
+meansteps1 <- mean(x = stepsperday1$steps)
+mediansteps1 <- median(x = stepsperday1$steps)
+```
+the mean of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
+
+the median of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
+
+the difference of mean of total number of steps taken per day is 0
+
+the difference of median of total number of steps taken per day is 1.1886792
+
+the impact of imputing missing data on the estimates of the total daily number of steps is median and mean are the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?

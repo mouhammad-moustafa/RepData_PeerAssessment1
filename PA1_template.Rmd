@@ -32,10 +32,15 @@ hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day
 ```
 
 #### 2. Calculate and report the mean and median total number of steps taken per day
+```{r, echo=TRUE}
+meansteps <- mean(x = stepsperday$steps)
+mediansteps <- median(x = stepsperday$steps)
+```
 
-the mean of total number of steps taken per day is `r mean(x = stepsperday$steps)`
 
-the median of total number of steps taken per day is `r median(x = stepsperday$steps)`
+the mean of total number of steps taken per day is `r meansteps`
+
+the median of total number of steps taken per day is `r mediansteps`
 
 
 
@@ -98,7 +103,18 @@ data1 <- data1[, c("interval", "steps", "date")]
 stepsperday1 <- aggregate(steps ~ date, data = data1, FUN = sum)
 ## Make a histogram
 hist(stepsperday1$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
-```
 
+meansteps1 <- mean(x = stepsperday1$steps)
+mediansteps1 <- median(x = stepsperday1$steps)
+```
+the mean of total number of steps taken per day is `r meansteps1`
+
+the median of total number of steps taken per day is `r mediansteps1`
+
+the difference of mean of total number of steps taken per day is `r meansteps1 - meansteps`
+
+the difference of median of total number of steps taken per day is `r mediansteps1 - mediansteps`
+
+the impact of imputing missing data on the estimates of the total daily number of steps is median and mean are the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
