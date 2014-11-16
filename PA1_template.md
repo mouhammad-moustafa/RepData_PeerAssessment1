@@ -134,3 +134,22 @@ the difference of median of total number of steps taken per day is 1.1886792
 the impact of imputing missing data on the estimates of the total daily number of steps is median and mean are the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+#### 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
+
+```r
+data1$weekdaysf <- as.factor(ifelse(weekdays(data1$date) %in% c("Saturday", "Sunday"), "weekend", "weekday"))
+```
+
+#### 2. Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).
+
+```r
+library(lattice)
+ xyplot(steps ~ interval | weekdaysf, data = data1, type = "l", layout = c(1, 2),
+        panel = function(x, y, ...) 
+         {
+                panel.average(x, y, horizontal = FALSE, col = "blue", ...)
+         }, xlab="Interval", ylab = "Average number of steps", scales=list(y=list(tick.number=10, limits = c(-10, 300))))
+```
+
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 
+
