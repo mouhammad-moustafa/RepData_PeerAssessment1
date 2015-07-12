@@ -22,26 +22,30 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 
 ## What is mean total number of steps taken per day?
-#### 1. Make a histogram of the total number of steps taken each day
+
+#### 1. compute the total number of steps per day ignoring the missing values
 ```{r, echo=TRUE}
-## compute the total number of steps per day ignoring the missing values
+## 
 stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
+```
+
+#### 2. Make a histogram of the total number of steps taken each day
+```{r, echo=TRUE}
 ## Make a histogram
 hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
 
 ```
 
-#### 2. Calculate and report the mean and median total number of steps taken per day
+#### 3. Calculate and report the mean and median total number of steps taken per day
 ```{r, echo=TRUE}
 meansteps <- mean(x = stepsperday$steps)
 mediansteps <- median(x = stepsperday$steps)
 ```
 
 
-the mean of total number of steps taken per day is `r meansteps`
+The mean of total number of steps taken per day is `r meansteps`
 
-the median of total number of steps taken per day is `r mediansteps`
-
+The median of total number of steps taken per day is `r mediansteps`
 
 
 ## What is the average daily activity pattern?
@@ -49,10 +53,13 @@ the median of total number of steps taken per day is `r mediansteps`
 ```{r, echo=TRUE}
 ## compute the average number of steps taken across all days ignoring the missing values
 asteps <- aggregate(steps ~ interval, data = data, FUN = "mean")
+
 ## create time column by adding coverting interval to H:m
 asteps$time <- paste(asteps$interval%/%100, asteps$interval%%100, sep = ":")
+
 ## as.POSIXlt: converts charcters to Time using "H:M" format
 asteps$time <- as.POSIXlt(asteps$time, format = "%H:%M")
+
 plot(x = asteps$time, y = asteps$steps, type ="l", xlab = "Time", ylab = "Average number of steps", col = "blue")
 ```
 
@@ -69,15 +76,15 @@ The 5-minute interval that contain the maximum number of steps , on average acro
 
 
 ## Imputing missing values
+
 #### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 ```{r, echo=TRUE}
 ## the sum of na values returns the total number of missing values in the dataset for each column
 ## the first column steps contains all the missing values
-missingvalues <- sapply(data, function(x) sum(is.na(x)))
-
-nbna <- missingvalues[1]
+nbna <- sum(is.na(data$steps))
 ```
-the total number of missing values in the dataset is `r nbna`
+The total number of missing values in the dataset is `r nbna`
+
 
 #### 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 ```{r, echo=TRUE}
@@ -89,6 +96,7 @@ data1 <- merge(x = data, y = avsteps, "interval")
 colnames(data1) <- c("interval", "steps", "date", "avsteps")
 
 ```
+
 #### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 ```{r, echo=TRUE}
 ## replace missing values by average value
@@ -107,15 +115,15 @@ hist(stepsperday1$steps, col="blue", main = "Total number of steps taken each da
 meansteps1 <- mean(x = stepsperday1$steps)
 mediansteps1 <- median(x = stepsperday1$steps)
 ```
-the mean of total number of steps taken per day is `r meansteps1`
+The mean of total number of steps taken per day is `r meansteps1`
 
-the median of total number of steps taken per day is `r mediansteps1`
+The median of total number of steps taken per day is `r mediansteps1`
 
-the difference of mean of total number of steps taken per day is `r meansteps1 - meansteps`
+The difference of mean of total number of steps taken per day is `r meansteps1 - meansteps`
 
-the difference of median of total number of steps taken per day is `r mediansteps1 - mediansteps`
+The difference of median of total number of steps taken per day is `r mediansteps1 - mediansteps`
 
-the impact of imputing missing data on the estimates of the total daily number of steps is median and mean are the same.
+The impact of imputing missing data on the estimates of the total daily number of steps is median and mean are almost the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 #### 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
