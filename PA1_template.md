@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
@@ -24,18 +19,24 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 
 ## What is mean total number of steps taken per day?
-#### 1. Make a histogram of the total number of steps taken each day
+
+#### 1. compute the total number of steps per day ignoring the missing values
 
 ```r
-## compute the total number of steps per day ignoring the missing values
+## 
 stepsperday <- aggregate(steps ~ date, data = data, FUN = sum)
+```
+
+#### 2. Make a histogram of the total number of steps taken each day
+
+```r
 ## Make a histogram
 hist(stepsperday$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
-#### 2. Calculate and report the mean and median total number of steps taken per day
+#### 3. Calculate and report the mean and median total number of steps taken per day
 
 ```r
 meansteps <- mean(x = stepsperday$steps)
@@ -43,10 +44,9 @@ mediansteps <- median(x = stepsperday$steps)
 ```
 
 
-the mean of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
+The mean of total number of steps taken per day is 1.0766189\times 10^{4}
 
-the median of total number of steps taken per day is 10765
-
+The median of total number of steps taken per day is 10765
 
 
 ## What is the average daily activity pattern?
@@ -55,14 +55,17 @@ the median of total number of steps taken per day is 10765
 ```r
 ## compute the average number of steps taken across all days ignoring the missing values
 asteps <- aggregate(steps ~ interval, data = data, FUN = "mean")
+
 ## create time column by adding coverting interval to H:m
 asteps$time <- paste(asteps$interval%/%100, asteps$interval%%100, sep = ":")
+
 ## as.POSIXlt: converts charcters to Time using "H:M" format
 asteps$time <- as.POSIXlt(asteps$time, format = "%H:%M")
+
 plot(x = asteps$time, y = asteps$steps, type ="l", xlab = "Time", ylab = "Average number of steps", col = "blue")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
 
 #### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -78,16 +81,16 @@ The 5-minute interval that contain the maximum number of steps , on average acro
 
 
 ## Imputing missing values
+
 #### 1. Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
 ```r
 ## the sum of na values returns the total number of missing values in the dataset for each column
 ## the first column steps contains all the missing values
-missingvalues <- sapply(data, function(x) sum(is.na(x)))
-
-nbna <- missingvalues[1]
+nbna <- sum(is.na(data$steps))
 ```
-the total number of missing values in the dataset is 2304
+The total number of missing values in the dataset is 2304
+
 
 #### 2. Devise a strategy for filling in all of the missing values in the dataset. The strategy does not need to be sophisticated. For example, you could use the mean/median for that day, or the mean for that 5-minute interval, etc.
 
@@ -99,6 +102,7 @@ data1 <- merge(x = data, y = avsteps, "interval")
 ## rename columns
 colnames(data1) <- c("interval", "steps", "date", "avsteps")
 ```
+
 #### 3. Create a new dataset that is equal to the original dataset but with the missing data filled in.
 
 ```r
@@ -117,21 +121,21 @@ stepsperday1 <- aggregate(steps ~ date, data = data1, FUN = sum)
 hist(stepsperday1$steps, col="blue", main = "Total number of steps taken each day", xlab = "Number of steps")
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
 
 ```r
 meansteps1 <- mean(x = stepsperday1$steps)
 mediansteps1 <- median(x = stepsperday1$steps)
 ```
-the mean of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
+The mean of total number of steps taken per day is 1.0766189\times 10^{4}
 
-the median of total number of steps taken per day is 1.0766189 &times; 10<sup>4</sup>
+The median of total number of steps taken per day is 1.0766189\times 10^{4}
 
-the difference of mean of total number of steps taken per day is 0
+The difference of mean of total number of steps taken per day is 0
 
-the difference of median of total number of steps taken per day is 1.1886792
+The difference of median of total number of steps taken per day is 1.1886792
 
-the impact of imputing missing data on the estimates of the total daily number of steps is median and mean are the same.
+The impact of imputing missing data on the estimates of the total daily number of steps is median and mean are almost the same.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 #### 1. Create a new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
@@ -151,5 +155,5 @@ library(lattice)
          }, xlab="Interval", ylab = "Average number of steps", scales=list(y=list(tick.number=10, limits = c(-10, 300))))
 ```
 
-![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-13-1.png) 
 
